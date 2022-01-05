@@ -5,3 +5,6 @@ hard*/**
 game.json
 first-guess.json
 similar-words.json
+hard errors
+notes
+wordle.js

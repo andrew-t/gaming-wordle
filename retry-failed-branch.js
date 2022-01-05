@@ -1,7 +1,11 @@
 const { solutions, guesses } = require('./words.json');
 const fs = require('fs');
 
-// just going to assume hard mode from now on, the old version's in git
+const args = require('process').argv;
+
+const startPath = args[2];
+const offset = parseInt(args[3] ?? '1', 10);
+console.log('Starting at', startPath);
 
 guesses.push(...solutions);
 
@@ -99,6 +103,7 @@ function similarity(sols) {
 }
 
 function bestGuess({sols, guesses, guessesSoFar, path}) {
+	const index = path == startPath ? offset : 0;
 	// this seems to be the best word you can start with
 	// if (guessesSoFar.length == 0) {
 	// 	return { word: 'twerp', groups: group('twerp', sols) };
@@ -124,10 +129,10 @@ function bestGuess({sols, guesses, guessesSoFar, path}) {
 		priorSimilarity, similarities
 	});
 
-	if (similarities[0].similarity < priorSimilarity) {
+	if (similarities[index].similarity < priorSimilarity) {
 	 	return {
-	 		word: similarities[0].guess,
-	 		groups: similarities[0].originalGroups
+	 		word: similarities[index].guess,
+	 		groups: similarities[index].originalGroups
 	 	};
 	}
 
@@ -192,7 +197,7 @@ function bestGuess({sols, guesses, guessesSoFar, path}) {
 	// console.log(JSON.stringify(g, (k,v)=>k=='groups'?null:v, 2));
 	// console.log(JSON.stringify(g,null,2));
 	// write('first-guess', g);
-	return g[0];
+	return g[index];
 }
 
 function worstGroup(groups) {
@@ -215,13 +220,7 @@ function count(arr, c) {
 // console.log(bestGuess(solutions, guesses, [], Infinity).guess); process.exit(0);
 
 // console.log(solutions.length)
-const start = {
-	guessesLeft: 6,
-	sols: solutions, // .slice(0, 1000),
-	guessesSoFar: [],
-	path: 'hard',
-	guesses: guesses
-};
+const start = require(`./${startPath}/results.json`);
 
 let wins = 0;
 const startedAt = Date.now();
@@ -240,14 +239,12 @@ function process(position) {
 		write(`${position.path}/failure`, position);
 		return position;
 	}
-	const { word, groups } = bestGuess(
-		position
-	);
+	const { word, groups } = bestGuess(position);
 	position.guess = word; // bestGuess(position.sols, position.guessesSoFar.map(g => g.guess));
 	position.next = groups; // group(position.guess, position.sols);
 	for (const [key, sols] of Object.entries(position.next)) {
 		const nextPath = `${position.path}/${position.guess}-${key}-${sols.length}`;
-		fs.mkdirSync(nextPath, 0777, () => {});
+		try { fs.mkdirSync(nextPath, 0777); } catch {}
 		position.next[key] = process({
 			// parent: position,
 			guessesLeft: position.guessesLeft - 1,
@@ -261,7 +258,7 @@ function process(position) {
 			guesses: guesses.filter(w => guessString(position.guess, w) == key)
 		});
 	}
-	write(`${position.path}/results`, position);
+	write(`${position.path}/results-${position.guess}`, position);
 	return position;
 }
 
