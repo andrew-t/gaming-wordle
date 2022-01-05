@@ -1,0 +1,7 @@
+*out/**
+*hard/**
+out*/**
+hard*/**
+game.json
+first-guess.json
+similar-words.json
