@@ -258,7 +258,10 @@ function process(position) {
 				{ guess: position.guess, r: key }
 			],
 			path: nextPath,
-			guesses: guesses.filter(w => guessString(position.guess, w) == key)
+			guesses: position.guesses.filter(w =>
+				guessString(position.guess, w) == key &&
+				!position.guessesSoFar.some(g => g.guess == w)
+			)
 		});
 	}
 	write(`${position.path}/results`, position);
