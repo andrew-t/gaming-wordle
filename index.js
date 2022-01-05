@@ -100,9 +100,9 @@ function similarity(sols) {
 
 function bestGuess({sols, guesses, guessesSoFar, path}) {
 	// this seems to be the best word you can start with
-	// if (guessesSoFar.length == 0) {
-	// 	return { word: 'twerp', groups: group('twerp', sols) };
-	// }
+	if (guessesSoFar.length == 0) {
+		return { word: 'blahs', groups: group('blahs', sols) };
+	}
 
 	// ok first things first
 	// strip out any words that are obviously total disasters

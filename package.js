@@ -41,11 +41,17 @@ function patch(replacement, ...results) {
 	const last = results.pop();
 	let target = hard;
 	for (const r of results) target = target.next[r];
-	target.next[last] = require('./' + target.next[last].path + '/results-' + replacement + '.json');
+	const newPos = require('./' + target.next[last].path + '/results-' + replacement + '.json');
+	// target.guess = replacement;
+	// console.log({target, newPos, replacement, results, last})
+	target.next[last] = newPos;
+	// console.log(target);
 }
 
+patch('dated', '⬛️⬛️🟨⬛️⬛️', '🟨⬛️⬛️🟨⬛️');
 patch('dampy', '⬛️⬛️🟨⬛️⬛️', '🟨⬛️⬛️⬛️⬛️', '⬛️🟩⬛️⬛️🟩');
-patch('repeg', '⬛️⬛️⬛️⬛️⬛️', '⬛️🟨⬛️⬛️⬛️', '⬛️⬛️⬛️🟩⬛️');
-patch('furan', '⬛️⬛️⬛️⬛️⬛️', '⬛️⬛️🟨⬛️🟨');
+patch('tsadi', '⬛️⬛️🟩⬛️🟨', '⬛️⬛️🟩🟨🟨');
+patch('woker', '⬛️⬛️⬛️⬛️⬛️', '⬛️🟨⬛️⬛️⬛️', '⬛️⬛️⬛️🟩🟩');
+patch('purin', '⬛️⬛️⬛️⬛️⬛️', '⬛️⬛️🟨⬛️🟨');
 
 write('hard', processPos(hard));

@@ -9,7 +9,6 @@ const YELLOW = Symbol('🟨');
 const BLACK = Symbol('⬛️');
 
 function test(source, hard) {
-	if (hard) console.log('no')
 	for (const solution of solutions) {
 		let pos = source;
 		const guessesSoFar = [];

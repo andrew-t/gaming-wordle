@@ -255,7 +255,7 @@ function process(position) {
 				{ guess: position.guess, r: key }
 			],
 			path: nextPath,
-			guesses: guesses.filter(w => guessString(position.guess, w) == key)
+			guesses: position.guesses.filter(w => guessString(position.guess, w) == key)
 		});
 	}
 	write(`${position.path}/results-${position.guess}`, position);
